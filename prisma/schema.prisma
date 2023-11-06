@@ -13,6 +13,7 @@ datasource db {
 model Book {
     id        String   @id @default(cuid())
     title     String
+    image     String?
     pages     Int
     author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
     published DateTime

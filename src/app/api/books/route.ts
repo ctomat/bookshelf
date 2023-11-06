@@ -4,8 +4,18 @@ import prisma from "~/db";
 
 let error: Prisma.PrismaClientKnownRequestError;
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
   const books = await prisma.book.findMany({
+    where: {
+      title: { contains: searchParams.get("title") ?? "", mode: "insensitive" },
+      author: {
+        name: {
+          contains: searchParams.get("author") ?? "",
+          mode: "insensitive",
+        },
+      },
+    },
     include: { author: { select: { name: true } } },
   });
   return NextResponse.json(books);
